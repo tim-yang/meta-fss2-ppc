@@ -1,0 +1,462 @@
+/*
+ * ULP (L100) Device Tree Source
+ *
+ * Copyright 2011-2012 Freescale Semiconductor Inc.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *	 notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *	 notice, this list of conditions and the following disclaimer in the
+ *	 documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Freescale Semiconductor nor the
+ *	 names of its contributors may be used to endorse or promote products
+ *	 derived from this software without specific prior written permission.
+ *
+ *
+ * ALTERNATIVELY, this software may be distributed under the terms of the
+ * GNU General Public License ("GPL") as published by the Free Software
+ * Foundation, either version 2 of that License or (at your option) any
+ * later version.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/include/ "fsl/p2041si-pre.dtsi"
+
+/ {
+	model = "fsl,P2041RDB";
+	compatible = "fsl,P2041RDB";
+	#address-cells = <2>;
+	#size-cells = <2>;
+	interrupt-parent = <&mpic>;
+
+	aliases {
+	pci0 = &pci0;
+        pci1 = &pci1;
+        msi0 = &msi0;
+        msi1 = &msi1;
+        msi2 = &msi2;
+        
+//		ethernet0 = &enet0;
+//		ethernet1 = &enet1;
+		ethernet2 = &enet2;
+		ethernet3 = &enet3;
+		ethernet4 = &enet4;
+//		ethernet5 = &enet5;
+		phy_rgmii_0 = &phy_rgmii_0;
+//		phy_rgmii_1 = &phy_rgmii_1;
+		phy_sgmii_2 = &phy_sgmii_2;
+		phy_sgmii_3 = &phy_sgmii_3;
+//		phy_sgmii_4 = &phy_sgmii_4;
+//		phy_sgmii_1c = &phy_sgmii_1c;
+//		phy_sgmii_1d = &phy_sgmii_1d;
+//		phy_sgmii_1e = &phy_sgmii_1e;
+//		phy_sgmii_1f = &phy_sgmii_1f;
+//		phy_xgmii_2 = &phy_xgmii_2;
+	};
+
+	memory {
+		device_type = "memory";
+	};
+
+	dcsr: dcsr@fc0000000 {
+		ranges = <0x00000000 0xf 0xc0000000 0x01008000>;
+	};
+
+	bportals: bman-portals@fc1000000 {
+		ranges = <0x0 0xf 0xc1000000 0x2000000>;
+	};
+
+	qportals: qman-portals@fc3000000 {
+		ranges = <0x0 0xf 0xc3000000 0x2000000>;
+	};
+
+	soc: soc@ffe000000 {
+		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
+		reg = <0xf 0xfe000000 0 0x00001000>;
+
+		spi@110000 {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        compatible = "fsl,p2040-espi", "fsl,mpc8536-espi";
+                        reg = <0x110000 0x30>;
+                        //interrupts = <53 0x2 0 0>;
+                        fsl,espi-num-chipselects = <4>;
+                        eeprom@0 {
+                                compatible = "eeprom,at25";
+                                spi-max-frequency = <5000000>;
+                                reg = <0>;
+                                size = <8192>;
+                                byte-len = <8192>;
+                                addr-mode = <2>;
+                                pagesize = <32>;
+                                address-width = <8>;
+                                #address-cells = <1>;
+                                #size-cells = <1>;
+                        };
+                        eeprom@1 {
+                                compatible = "eeprom,at25";
+                                spi-max-frequency = <5000000>;
+                                reg = <1>;
+                                size = <8192>;
+                                byte-len = <8192>;
+                                addr-mode = <2>;
+                                pagesize = <32>;
+                                address-width = <8>;
+                                #address-cells = <1>;
+                                #size-cells = <1>;
+                        };
+		};
+		i2c@118000 {
+                        rtc@51 {
+                                compatible = "EPSON,rtc8564";
+                                reg = <0x51>;
+                                interrupts = <0x1 0x1 0 0>;
+                        };
+		};
+
+		i2c@118100 {
+                        tmp421@4c {
+                                compatible = "ti,tmp421";
+                                reg = <0x4c>;
+                        };
+                        tmp421@4d {
+                                compatible = "ti,tmp421";
+                                reg = <0x4d>;
+                        };
+                        tmp421@4e {
+                                compatible = "ti,tmp421";
+                                reg = <0x4e>;
+                        };
+		};
+
+		usb1: usb@211000 {
+			dr_mode = "host";
+		};
+
+		fman0: fman@400000 {
+//			enet0: ethernet@e0000 {
+//				tbi-handle = <&tbi0>;
+//				phy-handle = <&phy_sgmii_2>;
+//				phy-connection-type = "sgmii";
+//			};
+
+			mdio0: mdio@e1120 {
+				tbi0: tbi-phy@8 {
+					reg = <0x8>;
+					device_type = "tbi-phy";
+				};
+
+				phy_rgmii_0: ethernet-phy@0x000001 {
+					reg = <0x000001>;
+				};
+				phy_rgmii_1: ethernet-phy@1 {
+					reg = <0x1>;
+				};
+				phy_sgmii_2: ethernet-phy@2 {
+					reg = <0x2>;
+				};
+				phy_sgmii_3: ethernet-phy@3 {
+					reg = <0x3>;
+				};
+				phy_sgmii_4: ethernet-phy@4 {
+					reg = <0x4>;
+				};
+				phy_sgmii_1c: ethernet-phy@1c {
+					reg = <0x1c>;
+				};
+				phy_sgmii_1d: ethernet-phy@1d {
+					reg = <0x1d>;
+				};
+				phy_sgmii_1e: ethernet-phy@1e {
+					reg = <0x1e>;
+				};
+				phy_sgmii_1f: ethernet-phy@1f {
+					reg = <0x1f>;
+				};
+			};
+
+//			enet1: ethernet@e2000 {
+//				tbi-handle = <&tbi1>;
+//				phy-handle = <&phy_sgmii_3>;
+//				phy-connection-type = "sgmii";
+//			};
+
+//			mdio@e3120 {
+//				tbi1: tbi-phy@8 {
+//					reg = <8>;
+//					device_type = "tbi-phy";
+//				};
+//			};
+
+			enet2: ethernet@e4000 {
+				tbi-handle = <&tbi2>;
+				phy-handle = <&phy_sgmii_2>;
+				phy-connection-type = "sgmii";
+			};
+
+			mdio@e5120 {
+				tbi2: tbi-phy@8 {
+					reg = <8>;
+					device_type = "tbi-phy";
+				};
+			};
+
+			enet3: ethernet@e6000 {
+				tbi-handle = <&tbi3>;
+				phy-handle = <&phy_sgmii_3>;
+				phy-connection-type = "sgmii";
+			};
+
+			mdio@e7120 {
+				tbi3: tbi-phy@8 {
+					reg = <8>;
+					device_type = "tbi-phy";
+				};
+			};
+
+			enet4: ethernet@e8000 {
+				tbi-handle = <&tbi4>;
+				phy-handle = <&phy_rgmii_0>;
+				phy-connection-type = "rgmii";
+			};
+
+			mdio@e9120 {
+				tbi4: tbi-phy@8 {
+					reg = <8>;
+					device_type = "tbi-phy";
+				};
+			};
+
+//			enet5: ethernet@f0000 {
+//				/*
+//				 * phy-handle will be updated by U-Boot to
+//				 * reflect the actual slot the XAUI card is in.
+//				 */
+//				phy-handle = <&phy_rgmii_0>;
+//				phy-connection-type = "rgmii";
+//			};
+//
+//			mdio@f1000 {
+//				/* XAUI card in slot 2 */
+//				phy_xgmii_2: ethernet-phy@0 {
+//					compatible = "ethernet-phy-ieee802.3-c45";
+//					reg = <0x0>;
+//				};
+//			};
+
+		};
+		cpu-irq0@0 {
+			compatible = "cpu-irq_irq00";
+			reg = <0 0>;
+			interrupts = <0 1 0 0>;
+		};
+		cpu-irq1@0 {
+			compatible = "cpu-irq_irq01";
+			reg = <0 0>;
+			interrupts = <1 1 0 0>;
+		};
+		cpu-irq2@0 {
+			compatible = "cpu-irq_irq02";
+			reg = <0 0>;
+			interrupts = <2 1 0 0>;
+		};
+		cpu-irq3@0 {
+			compatible = "cpu-irq_irq03";
+			reg = <0 0>;
+			interrupts = <3 1 0 0>;
+		};
+		cpu-irq4@0 {
+			compatible = "cpu-irq_irq04";
+			reg = <0 0>;
+			interrupts = <4 1 0 0>;
+		};
+		cpu-irq5@0 {
+			compatible = "cpu-irq_irq05";
+			reg = <0 0>;
+			interrupts = <5 1 0 0>;
+		};
+		cpu-irq10@0 {
+			compatible = "cpu-irq_irq10";
+			reg = <0 0>;
+			interrupts = <10 1 0 0>;
+		};
+		cpu-irq11@0 {
+			compatible = "cpu-irq_irq11";
+			reg = <0 0>;
+			interrupts = <11 1 0 0>;
+		};
+		cpu-irq16@16 {
+			compatible = "cpu-errirq";
+			reg = <0 0>;
+			interrupts = <16 2 1 13>;
+		};
+	};
+
+	lbc: localbus@ffe124000 {
+		reg = <0xf 0xfe124000 0 0x1000>;
+		ranges = <0 0 0xf 0xf4000000 0x08000000>;  /* FPGA Config FLASH (64MB) */
+
+                // UBoot Env is at 0xf7f60000 +20000
+                // 0x03f60000
+                // UBoot is at 0xf7f80000 +80000
+                // 0x03f80000
+		flash0@0,0 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "cfi-flash";
+                        reg = <0 0 0x08000000>;
+			bank-width = <2>;
+			device-width = <2>;
+			
+			partition@0 {
+				label = "FPGA Config FLASH";
+				reg = <0x0 0x03F00000>;
+			};
+			partition@1 {
+				label = "UBoot Environment";
+				reg = <0x03F60000 0x20000>;
+			};
+			partition@2 {
+				label = "UBoot Image";
+				reg = <0x03F80000 0x80000>;
+			};
+			partition@3 {
+				label = "Unused2";
+				reg = <0x03F20000 0x10000>;
+			};
+			partition@4 {
+				label = "MTD OOPS";
+				reg = <0x03F00000 0x40000>;
+			};
+		};
+	};
+
+	test: localbus@0 {
+//		reg = <0xf 0xfe124000 0 0x1000>;
+		ranges = <0 0 0xC 0xA5000000 0x08000000>;  /* UCNT Flash */
+
+		flash1@1,0 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "cfi-flash,physmap";
+                        reg = <0 0 0x08000000>;
+			bank-width = <2>;
+			device-width = <2>;
+			
+			partition@0 {
+				label = "UCNT FPGA FLASH";
+				reg = <0x0 0x03F00000>;
+			};
+		};
+	};
+	
+	// PCI#0 - CDEC
+	pci0: pcie@ffe200000 {
+                 compatible = "fsl,p2040-pcie", "fsl,qoriq-pcie-v2.2";
+                 device_type = "pci";
+                 #size-cells = <2>;
+                 #address-cells = <3>;
+                 bus-range = <0x0 0x10>;
+                 clock-frequency = <0x7F28154>;
+                 reg = <0xf 0xfe200000 0 0x1000>;
+		         ranges = <0x02010000 0x0 0x80000000 0xc 0x80000000 0x0 0x10000000 
+		                   0x01010000 0x0 0x00000000 0x0 0xf8000000 0x0 0x00010000>;
+                 pcie@0 {
+                         reg = <0 0 0 0 0>;
+                         #size-cells = <2>;
+                         #address-cells = <3>;
+                         device_type = "pci";
+                         ranges = <0x02010000 0x0 0x80000000 0x02010000 0x0 0x80000000 0x0 0x02000000
+                                   0x01010000 0x0 0x00000000 0x01010000 0x0 0x00000000 0x0 0x00010000>;
+                 };
+        };	
+
+        // PCI#1 - L2SW
+	pci1: pcie@ffe201000 {
+                 compatible = "fsl,p2040-pcie", "fsl,qoriq-pcie-v2.2";
+                 device_type = "pci";
+                 #size-cells = <2>;
+                 #address-cells = <3>;
+                 bus-range = <0x0 0xff>;
+                 clock-frequency = <0x7F28154>;
+                 reg = <0xf 0xfe201000 0 0x1000>;
+		         ranges = <0x02000000 0x0 0xa0000000 0xc 0xa0000000 0x0 0x10000000 
+		                   0x01000000 0x0 0x00000000 0xf 0xf8010000 0x0 0x00010000>;
+                 pcie@0 {
+                         reg = <0 0 0 0 0>;
+                         #interrupt-cells = <1>;
+                         #size-cells = <2>;
+                         #address-cells = <3>;
+                         device_type = "pci";
+                         ranges = <0x02042000 0x0 0xa0000000 0x02042000 0x0 0xA0000000 0x0 0x04000000 
+                                   0x01042000 0x0 0x00000000 0x01042000 0x0 0x00000000 0x0 0x00010000>;
+                 };
+        };	
+
+ 	// PCI#2 - MDEC
+	pci2: pcie@ffe202000 {
+                 compatible = "fsl,p2040-pcie", "fsl,qoriq-pcie-v2.2";
+                 device_type = "pci";
+                 #size-cells = <2>;
+                 #address-cells = <3>;
+                 bus-range = <0x0 0xff>;
+                 clock-frequency = <0x7F28154>;
+                 reg = <0xf 0xfe202000 0 0x1000>;
+		         ranges = <0x02100000 0x0 0x90000000 0xc 0x90000000 0x0 0x10000000 
+		                   0x01100000 0x0 0x00000000 0x0 0xf8020000 0x0 0x00010000>;
+                 pcie@0 {
+                         reg = <0 0 0 0 0>;
+                         #interrupt-cells = <1>;
+                         #size-cells = <2>;
+                         #address-cells = <3>;
+                         device_type = "pci";
+                         ranges = <0x02100000 0x0 0x90000000 0x02100000 0x0 0x90000000 0x0 0x10000000
+                                   0x01100000 0x0 0x00000000 0x01100000 0x0 0x00000000 0x0 0x00010000>;
+                 };
+        };	
+
+
+	fsl,dpaa {
+		compatible = "fsl,p2041-dpaa", "fsl,dpaa";
+
+//		ethernet@0 {
+//			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+//			fsl,fman-mac = <&enet0>;
+//		};
+//		ethernet@1 {
+//			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+//			fsl,fman-mac = <&enet1>;
+//		};
+		ethernet@2 {
+			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+			fsl,fman-mac = <&enet2>;
+		};
+		ethernet@3 {
+			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+			fsl,fman-mac = <&enet3>;
+		};
+		ethernet@4 {
+			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+			fsl,fman-mac = <&enet4>;
+		};
+//		ethernet@5 {
+//			compatible = "fsl,p2041-dpa-ethernet", "fsl,dpa-ethernet";
+//			fsl,fman-mac = <&enet5>;
+//		};
+	};
+};
+
+/include/ "fsl/p2041si-post.dtsi"
+/include/ "fsl/qoriq-dpaa-res1.dtsi"
