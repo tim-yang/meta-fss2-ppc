@@ -17,4 +17,4 @@ This directory contains following folder
 License
 ----
 
-[Fujitsu GPLv2](https://github.com/FujitsuNetworkCommunications/meta-fss2-ppc/blob/master/LICENSE)
+[GPLv2](https://github.com/FujitsuNetworkCommunications/meta-fss2-ppc/blob/master/LICENSE.md)
