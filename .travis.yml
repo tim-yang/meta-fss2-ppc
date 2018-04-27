@@ -1,0 +1,31 @@
+language: cpp
+dist: trusty
+compiler: gcc
+script:
+    - git config --global color.ui false
+    - git config --global user.name "Fujitsu Network Communications"
+    - git config --global user.email "noreply@us.fujitsu.com"
+    - repo init -u https://github.com/FujitsuNetworkCommunications/fss2-manifest.git -b $MANIFEST_RELEASE
+    - repo sync
+    - rm -rf poky/meta-fss2-ppc
+    - ln -rs . poky/meta-fss2-ppc
+    - . ./poky/fss2-init-build-env -m t600
+    - bitbake core-image-minimal
+env:
+    global:
+        - MANIFEST_RELEASE="master"
+        - LANG="en_US.UTF-8"
+addons:
+    apt:
+        packages:
+            - gawk
+            - wget
+            - git-core
+            - diffstat
+            - unzip
+            - texinfo
+            - gcc-multilib
+            - build-essential
+            - chrpath
+            - libsdl1.2-dev
+            - phablet-tools
