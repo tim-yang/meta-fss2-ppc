@@ -1,6 +1,6 @@
 # FSS2Linux
 
-![N|FssLinux](http://www.fujitsu.com/global/resources/design/stylesheets/images/css_images/fujitsu/symbolmark.gif)
+![N|FssLinux](http://www.fujitsu.com/global/resources/design/stylesheets/images/css_images/fujitsu/symbolmark.gif) [![Build Status](https://travis-ci.org/FujitsuNetworkCommunications/meta-fss2-ppc.svg?branch=master)](https://travis-ci.org/FujitsuNetworkCommunications/meta-fss2-ppc)
 
 FSS2 Linux is based of poky 1.6, 3.x kernel and hosted on public github server maintained by Fujitsu organization. 
 Following describes workflow and steps to download FSS2Linux from public github and create a working build environment.
