@@ -10,7 +10,9 @@ script:
     - rm -rf poky/meta-fss2-ppc
     - ln -rs . poky/meta-fss2-ppc
     - . ./poky/fss2-init-build-env -m t600
-    - bitbake core-image-minimal
+    - echo 'BB_DISKMON_DIRS = ""' >> conf/local.conf
+    - echo 'INHERIT += "rm_work"' >> conf/local.conf
+    - bitbake u-boot-mkimage-native
 env:
     global:
         - MANIFEST_RELEASE="master"
