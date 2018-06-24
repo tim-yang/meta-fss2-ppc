@@ -1,7 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI_append += "file://${MACHINE}/dts                     \
                    file://${MACHINE}/kconfig                 \
-                   file://patches/0001-Backport-PPC64-patch.patch \
+                   file://patches/0001-Change-to-fit-T600-NOR-flash-partition.patch \
+                   file://patches/0002-Fit-T600-HW-Remove-MMC-to-avoid-mmc0-Timeout-waiting.patch \
                    "
 # Example to add T600 patches/uboot env
 # SRC_URI_append_t600 += "file://${MACHINE}/patches/0001-L100-PCI-kernel.patch     \

@@ -1,0 +1,104 @@
+From e58ff84dabadeac47ca148a404d6aa8dd0df21a1 Mon Sep 17 00:00:00 2001
+From: sam_liao <sam_liao@accton.com>
+Date: Tue, 19 Jun 2018 06:02:23 +0000
+Subject: [PATCH 1/2] Chage to fit T600 NOR flash partition 16Mbyte mapping
+ start offset:0xFEF000000
+
+0x000000 ~ 0x01FFFF (128k) RCW
+0x020000 ~ 0x02FFFF (64k)  Reserved1
+0x030000 ~ 0x04FFFF (128k) H/W info.
+0x050000 ~ 0x0FFFFF (704k) Reserved2
+0x100000 ~ 0xEFFFFF (14M)  Reserved3
+0xF00000 ~ 0xF1FFFF (128k) FMAN ucode
+0xF20000 ~ 0xF3FFFF (128k) u-boot env
+0xF40000 ~ 0xFFFFFF (768k) u-boot
+
+0x0xFEF000000 ~ 0xFEFFFFFF , total 16MByte. 2byte swap.
+
+	modified:   arch/powerpc/boot/dts/t208xrdb.dtsi
+---
+ arch/powerpc/boot/dts/t208xrdb.dtsi | 56 +++++++++++++++++++++++++++++++------
+ 1 file changed, 47 insertions(+), 9 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/t208xrdb.dtsi b/arch/powerpc/boot/dts/t208xrdb.dtsi
+index 5fe951e5628..2d3197321d9 100644
+--- a/arch/powerpc/boot/dts/t208xrdb.dtsi
++++ b/arch/powerpc/boot/dts/t208xrdb.dtsi
+@@ -41,7 +41,7 @@
+ 
+ 	ifc: localbus@ffe124000 {
+ 		reg = <0xf 0xfe124000 0 0x2000>;
+-		ranges = <0 0 0xf 0xe8000000 0x08000000
++		ranges = <0 0 0xf 0xef000000 0x01000000
+ 			  2 0 0xf 0xff800000 0x00010000
+ 			  3 0 0xf 0xffdf0000 0x00008000>;
+ 
+@@ -49,19 +49,57 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "cfi-flash";
+-			reg = <0x0 0x0 0x8000000>;
++			reg = <0x0 0x0 0x1000000>;
+ 
+ 			bank-width = <2>;
+-			device-width = <1>;
+-		};
++			device-width = <2>;
++			byteswap;
+ 
+-		nand@1,0 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			compatible = "fsl,ifc-nand";
+-			reg = <0x2 0x0 0x10000>;
++			partition@0 {
++				reg = <0x0 0x20000>;
++				label = "RCW";
++			};
++			partition@1 {
++				reg = <0x20000 0x10000>;
++				label = "Reserved1";
++			};
++			partition@2 {
++				reg = <0x30000 0x20000>;
++				label = "hw-info";
++			};
++			partition@3 {
++				reg = <0x50000 0xb0000>;
++				label = "Reserved2";
++			};
++			partition@4 {
++				reg = <0x100000 0xe00000>;
++				label = "Reserved3";
++			};
++			partition@5 {
++				reg = <0xf00000 0x20000>;
++				label = "Fman-FW";
++			};
++			partition@6 {
++				reg = <0xf20000 0x20000>;
++				label = "uboot-env";
++			};
++			partition@7 {
++				reg = <0xf40000 0xc0000>;
++				label = "uboot";
++			};
++			partition@8 {
++				reg = <0x0 0x1000000>;
++				label = "all";
++			};
+ 		};
+ 
++//		nand@1,0 {
++//			#address-cells = <1>;
++//			#size-cells = <1>;
++//			compatible = "fsl,ifc-nand";
++//			reg = <0x2 0x0 0x10000>;
++//		};
++
+ 		boardctrl: board-control@2,0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-- 
+2.11.0
+
